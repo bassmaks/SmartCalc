@@ -37,8 +37,28 @@ test : $(LIBRARY)
 	$(CC) $(FLAGS) --coverage $(TEST) $(TEST_FLAGS) $(LIBRARY) -o test
 	./test
 
+install:
+	cd calculator && qmake && make && make clean
+	cp -r calculator/calculator.app ~/Desktop
+
+uninstall:
+	rm -rf calculator/calculator.app 
+	rm -rf ~/Desktop/calculator.app
+	rm -rf calculator/Makefile
+	
+
+
+dvi:
+	open dvi.html
+
+dist: install
+	mkdir archiv
+	cp -r *.c *.h Makefile calculator/ archiv
+	tar -cvzf calculator.tar.gz archiv
+	rm -rf archiv
+
 gcov_report: clean $(LIBRARY)
-	$(CC) --coverage $(FLAGS) $(TEST_FLAGS) $(TEST) *.c -o test $(CHECK) $(SMART)
+	$(CC) $(FLAGS) --coverage $(TEST) $(TEST_FLAGS) $(LIBRARY) parser.c stack.c smartcalc.c -o test $(SMART)
 	./test
 #	$(CC) $(FLAGS) --coverage $(TEST) $(S21_DECIMAL) s21*.c  -o test $(TEST_FLAGS) 
 	lcov -t "test" -o test.info -c -d .
@@ -46,7 +66,8 @@ gcov_report: clean $(LIBRARY)
 	open ./report/index.html
 
 clean:
-	rm -rf *.o *.a *.gcno *.gcda test test.info *.out report
+	rm -rf *.o *.a *.gcno *.gcda test test.info *.out report 
+	rm -rf calculator.tar.gz
 	
 
 style:

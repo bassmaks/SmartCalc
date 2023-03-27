@@ -1,6 +1,6 @@
 #include <check.h>
 
-#include "SmartCalc_v1.h"
+#include "smartcalc.h"
 
 START_TEST(DEPOSIT_CALCULATOR1) {
   long double depositAmount = 500;
@@ -544,6 +544,38 @@ START_TEST(SMART_CALCULATOR_NUMBERS38) {
   ck_assert_int_eq(RESULT_CODE, SUCCESS);
 }
 END_TEST
+START_TEST(SMART_CALCULATOR_NUMBERS39) {
+  char result[512] = {0};
+  int RESULT_CODE = smart_calculator("3----", 0, result);
+
+  ck_assert_str_eq(result, "ERROR");
+  ck_assert_int_eq(RESULT_CODE, FAILURE);
+}
+END_TEST
+START_TEST(SMART_CALCULATOR_NUMBERS40) {
+  char result[512] = {0};
+  int RESULT_CODE = smart_calculator("**", 0, result);
+
+  ck_assert_str_eq(result, "ERROR");
+  ck_assert_int_eq(RESULT_CODE, FAILURE);
+}
+END_TEST
+START_TEST(SMART_CALCULATOR_NUMBERS41) {
+  char result[512] = {0};
+  int RESULT_CODE = smart_calculator("-^+", 0, result);
+
+  ck_assert_str_eq(result, "ERROR");
+  ck_assert_int_eq(RESULT_CODE, FAILURE);
+}
+END_TEST
+START_TEST(SMART_CALCULATOR_NUMBERS42) {
+  char result[512] = {0};
+  int RESULT_CODE = smart_calculator("^*", 0, result);
+
+  ck_assert_str_eq(result, "ERROR");
+  ck_assert_int_eq(RESULT_CODE, FAILURE);
+}
+END_TEST
 
 START_TEST(SMART_CALCULATOR_FUNCTIONS1) {
   char result[512] = {0};
@@ -683,6 +715,15 @@ START_TEST(SMART_CALCULATOR_FUNCTIONS17) {
 }
 END_TEST
 
+START_TEST(SMART_CALCULATOR_FUNCTIONS18) {
+  char result[512] = {0};
+  int RESULT_CODE = smart_calculator("cos(2x)", 0, result);
+
+  ck_assert_str_eq(result, "ERROR");
+  ck_assert_int_eq(RESULT_CODE, FAILURE);
+}
+END_TEST
+
 int main() {
   Suite *s1 = suite_create("Core");
   TCase *tc = tcase_create("Core");
@@ -746,6 +787,10 @@ int main() {
   tcase_add_test(tc, SMART_CALCULATOR_NUMBERS36);  // -2^2
   tcase_add_test(tc, SMART_CALCULATOR_NUMBERS37);  // 2^2^3
   tcase_add_test(tc, SMART_CALCULATOR_NUMBERS38);  // 3,5 * 2,8
+  tcase_add_test(tc, SMART_CALCULATOR_NUMBERS39);  // 3----
+  tcase_add_test(tc, SMART_CALCULATOR_NUMBERS40);  // **
+  tcase_add_test(tc, SMART_CALCULATOR_NUMBERS41);  // -^*
+  tcase_add_test(tc, SMART_CALCULATOR_NUMBERS42);  // ^*
 
   tcase_add_test(tc, SMART_CALCULATOR_FUNCTIONS1);  // cos(1)
   tcase_add_test(tc, SMART_CALCULATOR_FUNCTIONS2);
@@ -766,6 +811,7 @@ int main() {
   tcase_add_test(tc, SMART_CALCULATOR_FUNCTIONS15);  // cos(*)
   tcase_add_test(tc, SMART_CALCULATOR_FUNCTIONS16);  // cos(*/+-)
   tcase_add_test(tc, SMART_CALCULATOR_FUNCTIONS17);  // cos(cos(1.1.2))
+  tcase_add_test(tc, SMART_CALCULATOR_FUNCTIONS18);  // cos(2x)
 
   srunner_set_fork_status(sr, CK_NOFORK);
   srunner_run_all(sr, CK_ENV);
